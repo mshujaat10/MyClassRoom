@@ -1,0 +1,100 @@
+import React, { useState, useContext, useEffect, useRef } from 'react'
+import Context from '../context/classes/Context';
+import userImg from '../assets/user2.png'
+import JoinedClasses from './JoinedClasses';
+import { useNavigate } from 'react-router-dom';
+
+const Joinclass = () => {
+    const [Room, setRoom] = useState({ room: "" });
+    const ref = useRef(null)
+    const context = useContext(Context);
+    const { joinClass, JoinedClass } = context;
+    const [ClassData,setClassData] = useState([]);
+    const Navigate = useNavigate();
+
+    const classJoin = () => {
+        joinClass(Room.room)
+        ref.current.click()
+        // Navigate(`/about`)
+        console.log('Joining class with Room:', Room.room);
+        console.log('Joining class with Room:', Room.student);
+    }
+
+    const OnChange = (e) => {
+        setRoom({ ...Room, [e.target.name]: e.target.value });
+        console.log('Room state:', Room);
+    };
+
+    useEffect(() => {
+        console.log("JoinedClass", JoinedClass);
+        setClassData(JoinedClass);
+    }, [JoinedClass])
+
+    useEffect(()=>{
+        console.log("data agaya",ClassData)
+    },[ClassData])
+
+    return (
+        <>
+            <div>
+                <div className="modal fade" id="joinClassModal" tabIndex="-1" aria-labelledby="joinClassModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-fullscreen">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="btn-close mx-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h1 className="modal-title fs-4 ms-4 opacity-50" id="exampleModalLabel">Join class</h1>
+                                <button type="button" className="btn btn-primary ms-auto rounded-0 px-4" data-bs-dismiss="modal" ref={ref} disabled={!Room.room} onClick={classJoin}>Join</button>
+                            </div>
+                            <div className="modal-body d-flex flex-column align-items-center">
+
+                                <div className="container border w-50 rounded-3 p-3">
+                                    <div className="row">
+                                        <div className="col">
+                                            <p className='ps-3'>You're currently signed in as</p>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-auto pe-0">
+                                                <img className='rounded-5 mx-3' src={userImg} />
+                                            </div>
+                                            <div className="col-7 p-0">
+                                                <p className='fw-semibold m-0'>Muhammad Shujaat Ullah Khan</p>
+                                                <p className='email-p'>umuhammadshujaat@gmail.com</p>
+                                            </div>
+                                            <div className="col-auto p-0">
+                                                <button className="btn btn-outline-primary fw-semibold px-4 rounded-0">Switch account</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="container border w-50 rounded-3 py-4 px-4 mt-3">
+                                    <h5>Class code</h5>
+                                    <p>Ask your teacher for the class code, then enter here.</p>
+                                    <div className="form-floating mb-3">
+                                        <input type='number' className="form-control rounded-0 w-50 border-black" id="floatingInput" placeholder="Class code" name='room' value={Room.room} onChange={OnChange} />
+                                        <label htmlFor="floatingInput">Class code</label>
+                                    </div>
+                                </div>
+
+                                <div className="container w-50 mt-3">
+                                    <span className="fw-semibold font-style">To sign in with a class code</span>
+                                    <li className='my-2'>Use an authorised account</li>
+                                    <li className='mb-2'>Use a class code with 5-7 letters or numbers, and no spaces or symbols</li>
+                                    <p>If you have trouble joining the class, go to the <a href="#" className="text-decoration-none links">Help Center article</a></p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* {JoinedClass.map((data) => {
+                return <JoinedClasses key={data._id} data={data} />
+            })} */}
+
+        </>
+    )
+}
+
+export default Joinclass
