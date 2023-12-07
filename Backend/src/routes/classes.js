@@ -28,6 +28,64 @@ router.get('/fetchstudentclass', fetchuser, async (req, res) => {
     }
 });
 
+router.post('/joinclass', fetchuser, async (req, res) => {
+    try {
+        const { room } = req.body;
+
+        // const studentExist = await Classes.find({students:req.user.id})
+        // if(studentExist){
+        //     return res.status(409).json({Error:"You have already enrolled the class"})
+        // }
+
+        // Check if the user is already enrolled in the class
+        const isUserEnrolled = await Classes.findOne({
+            room: parseInt(room),
+            students: req.user.id
+        });
+
+        if (isUserEnrolled) {
+            return res.status(400).json({ error: "User is already enrolled in the class" });
+        }
+
+        const isRoomFound = await Classes.findOneAndUpdate(
+            { room: parseInt(room) }, // Ensure room is parsed as an integer
+            { $push: { students: req.user.id } },
+            { new: true }
+        )
+        if (!isRoomFound) {
+            return res.status(400).json({ error: "Room not found" });
+        }
+
+        res.json(isRoomFound);
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+router.delete('/unenrollclass/:classid', fetchuser, async (req, res) => {
+    try {
+        // Find the class based on the students array
+
+        let enrollClass = await Classes.findById({ _id: req.params.classid });
+
+        if (!enrollClass) {
+            return res.status(404).send("Class not found");
+        }
+
+        // Remove the student from the students array
+        enrollClass.students = enrollClass.students.filter(student => student._id != req.user.id);
+
+        // Save the updated class
+        await enrollClass.save();
+
+        res.json({ success: "Student unenrolled from class", class: enrollClass });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 router.post('/createclass', fetchuser, async (req, res) => {
     try {
         const { classname, section, subject, room } = req.body;
@@ -115,70 +173,5 @@ router.delete('/deleteclass/:id', fetchuser, async (req, res) => {
 //         res.status(500).send("Internal Server Error");
 //     }
 // })
-
-router.post('/joinclass', fetchuser, async (req, res) => {
-    try {
-        const { user, room } = req.body;
-        console.log({ user, room })
-        // const studentExist = await Classes.findOne({students:user})
-        // if(studentExist){
-        //     return res.status(409).json({Error:"You have already enrolled the class"})
-        // }
-
-        const isRoomFound = await Classes.findOneAndUpdate(
-            { room: parseInt(room) }, // Ensure room is parsed as an integer
-            { $push: { students: req.user.id } },
-            { new: true }
-        )
-        if (!isRoomFound) {
-            return res.status(400).json({ error: "Room not found" });
-        }
-
-        res.json(isRoomFound);
-    } catch (error) {
-        console.log(error)
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-// router.delete('/unrollclass/:id', fetchuser, async (req,res)=>{
-//     try {
-//         let enrollClass = await Classes.findOne({students:req.params.id});
-
-//         if (!enrollClass) {
-//             return res.status(404).send("Not Found");
-//         }
-//         Class = await Classes.findByIdAndDelete(req.params.id);
-
-//         // res.json({ Success: "Class has been deleted", Class: Class })
-
-//     } catch (error) {
-//         res.status(500).send("Internal Server Error");
-//     }
-// })
-
-router.delete('/unenrollclass/:id', fetchuser, async (req, res) => {
-    try {
-      // Find the class based on the students array
-      let enrollClass = await Classes.findOne({ students: req.params.id });
-  
-      if (!enrollClass) {
-        return res.status(404).send("Class not found");
-      }
-  
-      // Remove the student from the students array
-      enrollClass.students = enrollClass.students.filter(student => student._id != req.params.id);
-  
-      // Save the updated class
-    //   await enrollClass.save();
-  
-      res.json({ success: "Student unenrolled from class", class: enrollClass });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-
 
 module.exports = router;

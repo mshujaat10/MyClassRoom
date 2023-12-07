@@ -1,4 +1,4 @@
-import React, { useState,useContext , useEffect } from 'react'
+import React, { useState,useContext } from 'react'
 import Context from '../context/classes/Context';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -36,19 +36,19 @@ const Modal = () => {
             </div>
             <div className="modal-body">
               <div className="form-floating mb-3">
-                <input type="text" className="form-control border-0 float-inpt rounded-0" id="classname" placeholder="Class name (required)" name='classname' value={classCredentials.classname} onChange={OnChange} />
+                <input autoComplete='off' type="text" className="form-control border-0 float-inpt rounded-0" id="classname" placeholder="Class name (required)" name='classname' value={classCredentials.classname} onChange={OnChange} />
                 <label htmlFor="classname">Class name (required)</label>
               </div>
               <div className="form-floating mb-3">
-                <input type="text" className="form-control border-0 float-inpt rounded-0" id="section" placeholder="Section" name='section' value={classCredentials.section} onChange={OnChange} />
+                <input autoComplete='off' type="text" className="form-control border-0 float-inpt rounded-0" id="section" placeholder="Section" name='section' value={classCredentials.section} onChange={OnChange} />
                 <label htmlFor="section">Section</label>
               </div>
               <div className="form-floating mb-3">
-                <input type="text" className="form-control border-0 float-inpt rounded-0" id="subject" placeholder="Subject" name='subject' value={classCredentials.subject} onChange={OnChange} />
+                <input autoComplete='off' type="text" className="form-control border-0 float-inpt rounded-0" id="subject" placeholder="Subject" name='subject' value={classCredentials.subject} onChange={OnChange} />
                 <label htmlFor="subject">Subject</label>
               </div>
               <div className="form-floating mb-3">
-                <input type="text" className="form-control border-0 float-inpt rounded-0" id="room" placeholder="Room" name='room' value={classCredentials.room} onChange={OnChange} />
+                <input autoComplete='off' type="text" className="form-control border-0 float-inpt rounded-0" id="room" placeholder="Room" name='room' value={classCredentials.room} onChange={OnChange} />
                 <label htmlFor="room">Room</label>
               </div>
             </div>

@@ -2,6 +2,15 @@
     cursor: pointer;
 }
 
+.modal.fade .modal-dialog {
+    transform: scale(0.9);
+    transition: transform 0.1s ease-out;
+  }
+
+  .modal.fade.show .modal-dialog {
+    transform: scale(1);
+  }
+
 .material-symbols-outlined:hover {
     background-color: rgb(223, 223, 223);
 }
@@ -647,4 +656,9 @@
 }
 .comments-btn:hover{
     background-color: #f0f0f0;
+}
+
+.normal_font{
+    letter-spacing: .01785714em;
+    font-size: 0.94rem;
 }

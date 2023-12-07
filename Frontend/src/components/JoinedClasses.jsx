@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useContext } from 'react';
 import userimg from '../assets/user2.png'
 import { Link } from 'react-router-dom';
+import Context from '../context/classes/Context';
 
 const JoinedClasses = (props) => {
     const { data } = props;
+    const context = useContext(Context);
+    const { deleteStudentClass } = context;
 
     let classname = data.classname;
     // let origina = classname.replace(/\s/g, '')
@@ -14,13 +17,27 @@ const JoinedClasses = (props) => {
         classname = `${classname.substring(0, 20)}...`;
     }
 
-    useEffect(() => {
-        console.log("ye data hai", data)
-    }, [data])
-
     return (
         <>
-            <div className="card-parent mb-3 d-flex flex-wrap">
+            <div className="modal fade" id="exampleconfirmModal" tabIndex="-1" aria-labelledby="exampleconfirmModal" aria-hidden="true" data-backdrop="false">
+                <div className="modal-dialog modal-dialog-centered modal-sm">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <h6 className='lh-base'>Unenrol from {classname}?</h6>
+                            <div>
+                                <p className='mb-0 normal_font'>You will be removed from this class.</p>
+                            </div>
+                        </div>
+                        <div className="text-end pb-2">
+                            <button type="button" className="btn font " data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" className="btn font text-primary" data-bs-dismiss="modal" onClick={() => deleteStudentClass(data._id)}>Unenrol</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div className="card-parent mb-4 d-flex flex-wrap">
                 <div className="card new-card me-4">
                     <div className='image-div'></div>
                     <div className="card-img-overlay overlay-img-1 d-flex justify-content-between">
@@ -33,16 +50,16 @@ const JoinedClasses = (props) => {
                                 more_vert
                             </span>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item edit-dele-btn">Unroll Class</a></li>
+                                <li><a className="dropdown-item edit-dele-btn" data-bs-toggle="modal" data-bs-target="#exampleconfirmModal" >Unerol Class</a></li>
                             </ul>
                         </div>
                     </div>
                     <div className='overlay-img-2 card-img-overlay d-flex justify-content-between'>
-                        <a className='text-light teacher-name-div' href="#">{data.user.firstname} {data.user.lastname}</a>
+                        <a className='text-light teacher-name-div edit-dele-btn'>{data.user.firstname} {data.user.lastname}</a>
                         <img src={userimg} className="teacher-image rounded-circle" />
                     </div>
                     <div className="card-body">
-                        <p className='card-body-hidden'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem cum perferendis et dolorem natus quidem cupiditate </p>
+                        <p className='card-body-hidden'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut </p>
                     </div>
                     <div className="card-footer bg-white">
                         <div className='d-flex align-items-center justify-content-end'>

@@ -5,12 +5,12 @@ import Home from './Home';
 import Navbar from "./Navbar"
 import { useNavigate } from 'react-router-dom'
 import JoinedClasses from './JoinedClasses';
+import Popuperror from './Popuperror';
 
 const Classes = () => {
     const context = useContext(Context);
     const [EditClass, setEditClass] = useState({ id: "", eclassname: "", esection: "", esubject: "", eroom: "" })
     const { MyClass, fetchClass, editClass, EnrolledClass, fetchEnrolledClass } = context;
-    const [StudentClass, setStudentClass] = useState([])
     const ref = useRef(null);
     const refClose = useRef(null);
     const Navigate = useNavigate();
@@ -24,11 +24,6 @@ const Classes = () => {
             Navigate("/login")
         }
     }, [])
-
-    useEffect(() => {
-        setStudentClass(EnrolledClass)
-        console.log("StudentClass", StudentClass)
-    }, [EnrolledClass])
 
     const OnChange = (e) => {
         setEditClass({ ...EditClass, [e.target.name]: e.target.value });
@@ -49,9 +44,7 @@ const Classes = () => {
             eroom: currentClass.room
         })
     }
-    useEffect(() => {
-        console.log("ye wala dekh ab", StudentClass);
-    }, [StudentClass])
+
     return (
         <>
             <Navbar />
@@ -73,20 +66,20 @@ const Classes = () => {
                         </div>
                         <div className="modal-body">
                             <div className="form-floating mb-3">
-                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="floatingInput" placeholder="Class name (required)" name='eclassname' value={EditClass.eclassname} onChange={OnChange} />
-                                <label htmlFor="floatingInput">Class name (required)</label>
+                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="eclassname" placeholder="Class name (required)" name='eclassname' value={EditClass.eclassname} onChange={OnChange} />
+                                <label htmlFor="eclassname">Class name (required)</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="floatingInput" placeholder="Section" name='esection' value={EditClass.esection} onChange={OnChange} />
-                                <label htmlFor="floatingInput">Section</label>
+                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="esection" placeholder="Section" name='esection' value={EditClass.esection} onChange={OnChange} />
+                                <label htmlFor="esection">Section</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="floatingInput" placeholder="Subject" name='esubject' value={EditClass.esubject} onChange={OnChange} />
-                                <label htmlFor="floatingInput">Subject</label>
+                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="esubject" placeholder="Subject" name='esubject' value={EditClass.esubject} onChange={OnChange} />
+                                <label htmlFor="esubject">Subject</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="floatingInput" placeholder="Room" name='eroom' value={EditClass.eroom} onChange={OnChange} />
-                                <label htmlFor="floatingInput">Room</label>
+                                <input type="text" className="form-control border-0 float-inpt rounded-0" id="eroom" placeholder="Room" name='eroom' value={EditClass.eroom} onChange={OnChange} />
+                                <label htmlFor="eroom">Room</label>
                             </div>
                         </div>
                         <div className="d-flex justify-content-end p-3">
@@ -98,8 +91,8 @@ const Classes = () => {
             </div>
 
             {
-                // MyClass.length === 0 ? <Home /> :
-
+                //  <Home /> :
+                //    StudentClass.length && MyClass.length === 0 ? <Home/>:
                 <div className='ps-4'>
                     <div className='d-flex align-items-center text-primary ps-2 py-4'>
                         <div className='d-flex align-items-center me-4'>
@@ -113,14 +106,16 @@ const Classes = () => {
                     <div className="d-flex flex-wrap">
 
                         {MyClass.map((data) => {
-                            console.log(">>", data);
                             return <ClassItems key={data._id} updateClass={updateClass} data={data} />
                         })}
 
-                        {StudentClass.map((data) => {
-                            console.log(">>....", data);
-                            console.log("ye wala", data.students)
-                            return <JoinedClasses key={data._id} data={data} />
+                        {EnrolledClass.map((data) => {
+                            if (data.error) {
+                                return <Popuperror key={"1"} />
+                            }
+                            else {
+                                return <JoinedClasses key={data._id} data={data} />
+                            }
                         })}
 
                     </div>

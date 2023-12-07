@@ -6,7 +6,6 @@ const MyContext = (props) => {
   const classData = [];
   const [MyClass, setMyClass] = useState(classData);
   const [UserRes, setUserRes] = useState([]);
-  const [JoinedClass, setJoinedClass] = useState([]);
   const [EnrolledClass, setEnrolledClass] = useState([]);
 
 
@@ -31,7 +30,6 @@ const MyContext = (props) => {
       }
     });
     const json = await response.json();
-    console.log(json);
     setEnrolledClass(json)
   }
 
@@ -46,10 +44,22 @@ const MyContext = (props) => {
     });
 
     const json = await response.json();
-
-    console.log("json", json);
-    setJoinedClass(json);
+    setEnrolledClass(EnrolledClass.concat(json));
   };
+
+  const deleteStudentClass = async (id) => {
+    const response = await fetch(`${host}/classes/unenrollclass/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": localStorage.getItem("Token")
+      }
+    })
+    const deletedclass = EnrolledClass.filter((deleclass) => {
+      return deleclass._id !== id
+    })
+    setEnrolledClass(deletedclass)
+  }
 
 
   const addClass = async (classname, section, subject, room) => {
@@ -127,9 +137,9 @@ const MyContext = (props) => {
       UserRes,
       getUsers,
       joinClass,
-      JoinedClass,
       fetchEnrolledClass,
-      EnrolledClass
+      EnrolledClass,
+      deleteStudentClass
     }}>
       {props.children}
     </Context.Provider>

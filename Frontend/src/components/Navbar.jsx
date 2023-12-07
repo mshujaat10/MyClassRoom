@@ -11,8 +11,8 @@ const Navbar = () => {
   return (
     <>
       <Modal />
-      <Offcanvas />
       <Joinclass />
+      <Offcanvas />
 
       <nav className="navbar navbar-expand-lg shadow-sm">
         <div className="container-fluid">
@@ -49,6 +49,8 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+
+      
     </>
   )
 }
